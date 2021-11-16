@@ -1,3 +1,13 @@
-# bd_nosql_proteins
+# NoSQL Proteins
 
-Lisez-moi
+## Installation
+
+```bash
+$ pip install -r requirements.txt
+```
+
+## Run
+
+```bash
+$ python main.py
+```
