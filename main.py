@@ -33,8 +33,10 @@ def computeMatriceSimilarites(dataset):
     matrice = np.zeros((len(nomsProteines),len(nomsProteines)+1), dtype=object) # np.zeros(nb lignes, nb colonnes)
     for i in range(len(nomsProteines)):
         matrice[i][0] = nomsProteines[i]
-        for j in range(len(nomsProteines)):
-            matrice[i][j+1] = compare(dataset['Domains'][i],dataset['Domains'][j])
+        for j in range(i,len(nomsProteines)):
+            temp = compare(dataset['Domains'][i],dataset['Domains'][j])
+            matrice[i][j+1] = temp
+            matrice[j][i+1] = temp
         print(i, '/', len(nomsProteines), ' proteins treated')
     return matrice
 
@@ -51,7 +53,7 @@ print(newDF)
 stageDataframeCreation_time = datetime.now()
 print('Création du dataframe : ', stageDataframeCreation_time - start_time, ' (hh:mm:ss.ms)')
 
-newDF.to_csv(path_or_buf='datas/matrix.csv')
+newDF.to_csv(path_or_buf='datas/matrix_tri.csv')
 
 stageCSVExport_time = datetime.now()
 print('Création du dataset : ', stageDSCreated_time - start_time, ' (hh:mm:ss.ms)')
