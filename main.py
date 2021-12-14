@@ -1,7 +1,10 @@
-import pandas as pd 
+import similarites
 
-brut = pd.read_csv(r'datas/test.tab', sep='\t')
-domains = brut["Cross-reference (InterPro)"].str.split(';')
-dataset = pd.DataFrame({'Entry': brut["Entry"], 'Domains': domains[:]})
+def main():
+    similarites.compute_matrix('datas/matrix_tri.csv')
+    # graph.graph_creation()
+
+if __name__ == "__main__":
+    main()
 
 print(dataset)
