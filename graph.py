@@ -20,7 +20,7 @@ Requete de creation du fichier
 def create():
 	q = """
 	LOAD CSV WITH HEADERS FROM 'file:///test.tab' AS l FIELDTERMINATOR '\t'
-	CREATE (n:Protein{entry:toString(l.Entry), cross:l.Crossreference});
+	CREATE (n:Prot{entry:toString(l.Entry), cross:l.Crossreference});
 	"""
 
 	results = session.run(q).data()
@@ -33,12 +33,10 @@ Requete neo4j de creation du lien
 
 def createSim():
 
-	qDel = "MATCH (a:Protein)-[r:SIMILARITE]->(b:Protein) DELETE r"
+	qDel = "MATCH (a:Prot)-[r:SIMILARITE]->(b:Prot) DELETE r"
 	session.run(qDel).data()
 
 	similarites = pd.read_csv("datas/matrix_tri.csv")
-
-	serie = dm_to_series1(similarites)
 
 	for column in similarites:
 		for index, row in similarites.iterrows():
@@ -50,9 +48,24 @@ def createSim():
 				print(row[column])
 				#q="CREATE (Protein:"+column+")-[r:SIMILARITE]->(Protein:"+index+")"
 				#q="MATCH (a:Prot), (b:Prot) WHERE a.entry = '"+str(index)+"' AND b.entry = '"+str(column)+"' CREATE (a)-[r:"+str(row[column])+"]->(b) RETURN type(r)"
-				q="MATCH (a:Protein {entry: \""+str(index)+"\"}) MATCH (b:Protein {entry:\""+str(column)+"\"}) MERGE (a)-[rel:SIMILARITE {value:["+str(row[column])+"]}]-(b) RETURN rel;"
+				q="MATCH (a:Prot {entry: \""+str(index)+"\"}) MATCH (b:Prot {entry:\""+str(column)+"\"}) MERGE (a)-[rel:SIMILARITE {value:["+str(row[column])+"]}]-(b) RETURN rel;"
 				print (q)
 				results = session.run(q).data()
+
+def createSim(prot):
+	similarites = pd.read_csv("datas/matrix_tri.csv")
+
+	for column in similarites:
+		if (column==prot):
+			for index, row in similarites.iterrows():
+				if (index!=column):
+					if (row[column]>0):
+						print (index)
+						print (column)
+						print(row[column])
+						q="MATCH (a:Prot {entry: \""+str(index)+"\"}) MATCH (b:Prot {entry:\""+str(column)+"\"}) MERGE (a)-[rel:SIMI {value:["+str(row[column])+"]}]-(b) RETURN rel;"
+						print (q)
+						results = session.run(q).data()
 
 
 """
@@ -61,11 +74,13 @@ Input depuis la ligne de commande :
 - 1 pour la remplir avec les similarites
 """
 
-print("Recreer DB : 0, similarite DB : 1")
+print("Recreer DB : 0, similarite DB : 1, similarité 1 prot : NOMPROT")
 input = input()
 if (input=="0"):
-	q="MATCH (n:Protein) detach delete n"
+	q="MATCH (n:Prot) detach delete n"
 	results = session.run(q).data()
 	create()
 elif (input=="1"):
 	createSim()
+else:
+	createSim(input)
