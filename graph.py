@@ -2,7 +2,6 @@ from neo4j import GraphDatabase
 
 driver = GraphDatabase.driver("bolt://localhost:7687")
 session = driver.session()
-
 print("connected.")
 
 q = """
