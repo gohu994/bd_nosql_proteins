@@ -66,6 +66,8 @@ def createSim(prot):
 						q="MATCH (a:Prot {entry: \""+str(index)+"\"}) MATCH (b:Prot {entry:\""+str(column)+"\"}) MERGE (a)-[rel:SIMI {value:["+str(row[column])+"]}]-(b) RETURN rel;"
 						print (q)
 						results = session.run(q).data()
+	else:
+		print ("Proteine pas trouvee")
 
 
 """
