@@ -17,6 +17,8 @@ class Protein(Resource):
     data = request.get_json()
     print(data['name'])
     
+    # Use the function
+    
     return Response(response=json.dumps({"Status": "Data inserted"}),
                   status=200,
                   mimetype='application/json')
