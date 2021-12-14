@@ -2,8 +2,6 @@ from neo4j import GraphDatabase
 import pandas as pd
 import numpy as np
 
-import sys
-
 driver = GraphDatabase.driver("bolt://localhost:7687")
 session = driver.session()
 print("connected.")
@@ -21,7 +19,7 @@ Requete de creation du fichier
 
 def create():
 	q = """
-	LOAD CSV WITH HEADERS FROM 'file:///tostestas.tab' AS l FIELDTERMINATOR '\t'
+	LOAD CSV WITH HEADERS FROM 'file:///test.tab' AS l FIELDTERMINATOR '\t'
 	CREATE (n:Protein{entry:toString(l.Entry), cross:l.Crossreference});
 	"""
 
