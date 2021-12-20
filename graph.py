@@ -19,8 +19,8 @@ Requete de creation du fichier
 
 def create():
 	q = """
-	LOAD CSV WITH HEADERS FROM 'file:///test.tab' AS l FIELDTERMINATOR '\t'
-	CREATE (n:Prot{entry:toString(l.Entry), cross:l.Crossreference});
+	LOAD CSV WITH HEADERS FROM 'file:///tostestas.tab' AS l FIELDTERMINATOR '\t'
+	CREATE (n:Prot{entry:toString(l.Entry), cross:l.Cross_reference, name:l.Protein_names});
 	"""
 
 	results = session.run(q).data()
@@ -31,12 +31,12 @@ Parcourir chaque paire (si similarite =/= 0 => requete neo4j)
 Requete neo4j de creation du lien
 """
 
-def createSim():
+def createAllSim():
 
 	qDel = "MATCH (a:Prot)-[r:SIMILARITE]->(b:Prot) DELETE r"
 	session.run(qDel).data()
 
-	similarites = pd.read_csv("datas/matrix_tri.csv")
+	similarites = pd.read_csv("datas/matrix_tri_test.csv")
 
 	for column in similarites:
 		for index, row in similarites.iterrows():
@@ -53,7 +53,7 @@ def createSim():
 				results = session.run(q).data()
 
 def createSim(prot):
-	similarites = pd.read_csv("datas/matrix_tri.csv")
+	similarites = pd.read_csv("datas/matrix_tri_test.csv")
 
 	for column in similarites:
 		if (column==prot):
@@ -83,6 +83,6 @@ if (input=="0"):
 	results = session.run(q).data()
 	create()
 elif (input=="1"):
-	createSim()
+	createAllSim()
 else:
 	createSim(input)
