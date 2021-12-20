@@ -24,15 +24,25 @@ LOAD CSV WITH HEADERS FROM 'file:///test.tab' AS l FIELDTERMINATOR '\t'
 CREATE (n:PRO{entry:toString(l.Entry), cross:l.Crossreference});
 ```
 
-## Print a Prot and its similarities links BY ENTRY
+## Print a Prot and its similarities links BY ENTRY (1 neighbour depth)
+## Care about adding LIMIT to your queries...
 
 ```neo4j
-MATCH (p:Protein {entry: 'Q03195'})-[:SIMILARITE]-(prot)
+MATCH (p:Prot {entry: 'P1'})-[:SIMILARITE]-(prot)
 RETURN prot,p
 ```
 
+## Print a Prot and its similarities links BY ENTRY (2 neighbour depth)
+## Care about adding LIMIT to your queries...
+
+```neo4j
+MATCH (p:Prot {entry: 'P1'})-[:SIMILARITE]-(prot)-[:SIMILARITE]-(prot2)
+RETURN prot,prot2,p LIMIT 15
+```
+
 ## Print a Prot and its similarities links BY PROTEIN NAME
-## (You need to have names inserted in your graph for this to work)
+## (You need to have protein names inserted in your graph for this to work)
+## Care about adding LIMIT to your queries...
 
 ```neo4j
 MATCH (p:Prot {name: 'Protein Name 1'})-[:SIMILARITE]-(prot)
