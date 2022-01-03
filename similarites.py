@@ -5,6 +5,8 @@ from datetime import datetime
 from csv import writer
 import os
 
+from pandas.core.frame import DataFrame
+
 def compute_matrix(output_matrix_path):
     start_time = datetime.now()
 
@@ -60,13 +62,21 @@ def compute_matrix(output_matrix_path):
         return matrice
 
 
-    protname = "P5"
+    protname = "P1"
     mat = computeMatriceSimilarites(dataset, protname)[0]
     mat[0] = protname
-    print(mat[0])
-    #print("qsgqsghqshqfshqsfh",list(mat[0]))
-    #print(list(dataset["Entry"]))
     
+    # calculer similatité des voisins
+    entries=list(dataset["Entry"])
+    matx=list(mat)
+    lstSimilaire = []
+    cpt = 0
+    for i in matx:
+        if i != 0 and i != protname and i != 1: #  
+            lstSimilaire.append(entries[cpt-1])
+            #print(cpt-1) # c'est l'index qui selectionne les proteine similaire
+        cpt += 1
+    print(lstSimilaire)
     
     if os.path.isfile("datas/matrix_tri.csv"):
         # fichier existe
@@ -75,10 +85,29 @@ def compute_matrix(output_matrix_path):
         # check if line exist
         if not (file.index == protname).any():
             append_list_as_row('datas/matrix_tri.csv', list(mat))
+
+            for name in list(lstSimilaire):
+                print("NAME : ",name)
+                mat2 = computeMatriceSimilarites(dataset, name)[0]
+                mat2[0] = name
+                if not (file.index == name).any():
+                    append_list_as_row('datas/matrix_tri.csv', list(mat2))
+                
     else:
         # fichier existe pas        
         append_list_as_row('datas/matrix_tri.csv', list(dataset["Entry"]))
         append_list_as_row('datas/matrix_tri.csv', list(mat))
+        file = pd.read_csv('datas/matrix_tri.csv', sep=',', keep_default_na=False)
         
+        print(list(lstSimilaire))
+        for name in list(lstSimilaire):
+            print("NAME : ",name)
+            mat2 = computeMatriceSimilarites(dataset, name)[0]
+            mat2[0] = name
+            if not (file.index == name).any():
+                append_list_as_row('datas/matrix_tri.csv', list(mat2))
+    
+    
+    
 
 compute_matrix("datas/matrix_tri.csv")
