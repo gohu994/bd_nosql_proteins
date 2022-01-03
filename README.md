@@ -48,3 +48,9 @@ RETURN prot,prot2,p LIMIT 15
 MATCH (p:Prot {name: 'Protein Name 1'})-[:SIMILARITE]-(prot)
 RETURN prot,p
 ```
+
+## Print the number of isolated proteins
+
+MATCH (p:Protein)
+WHERE NOT (p)-[:SIMILARITE]-(:Protein)
+RETURN COUNT(p) AS isolatedProteins
