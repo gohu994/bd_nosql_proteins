@@ -1,7 +1,6 @@
 from neo4j import GraphDatabase
 import pandas as pd
 import numpy as np
-
 import sys
 
 driver = GraphDatabase.driver("bolt://localhost:7687")
@@ -22,7 +21,8 @@ Requete de creation du fichier
 def create():
 	q = """
 	LOAD CSV WITH HEADERS FROM 'file:///tostestas.tab' AS l FIELDTERMINATOR '\t'
-	CREATE (n:Protein{entry:toString(l.Entry), cross:l.Crossreference});
+	CREATE (n:Prot{entry:toString(l.Entry), cross:l.Cross_reference, name:l.Protein_names});
+
 	"""
 
 	results = session.run(q).data()
@@ -33,14 +33,13 @@ Parcourir chaque paire (si similarite =/= 0 => requete neo4j)
 Requete neo4j de creation du lien
 """
 
-def createSim():
 
-	qDel = "MATCH (a:Protein)-[r:SIMILARITE]->(b:Protein) DELETE r"
+def createAllSim():
+
+	qDel = "MATCH (a:Prot)-[r:SIMILARITE]->(b:Prot) DELETE r"
 	session.run(qDel).data()
 
-	similarites = pd.read_csv("datas/matrix_tri.csv")
-
-	serie = dm_to_series1(similarites)
+	similarites = pd.read_csv("datas/matrix_tri_test.csv")
 
 	for column in similarites:
 		for index, row in similarites.iterrows():
@@ -52,9 +51,26 @@ def createSim():
 				print(row[column])
 				#q="CREATE (Protein:"+column+")-[r:SIMILARITE]->(Protein:"+index+")"
 				#q="MATCH (a:Prot), (b:Prot) WHERE a.entry = '"+str(index)+"' AND b.entry = '"+str(column)+"' CREATE (a)-[r:"+str(row[column])+"]->(b) RETURN type(r)"
-				q="MATCH (a:Protein {entry: \""+str(index)+"\"}) MATCH (b:Protein {entry:\""+str(column)+"\"}) MERGE (a)-[rel:SIMILARITE {value:["+str(row[column])+"]}]-(b) RETURN rel;"
+				q="MATCH (a:Prot {entry: \""+str(index)+"\"}) MATCH (b:Prot {entry:\""+str(column)+"\"}) MERGE (a)-[rel:SIMILARITE {value:["+str(row[column])+"]}]-(b) RETURN rel;"
 				print (q)
 				results = session.run(q).data()
+
+def createSim(prot):
+	similarites = pd.read_csv("datas/matrix_tri_test.csv")
+
+	for column in similarites:
+		if (column==prot):
+			for index, row in similarites.iterrows():
+				if (index!=column):
+					if (row[column]>0):
+						print (index)
+						print (column)
+						print(row[column])
+						q="MATCH (a:Prot {entry: \""+str(index)+"\"}) MATCH (b:Prot {entry:\""+str(column)+"\"}) MERGE (a)-[rel:SIMI {value:["+str(row[column])+"]}]-(b) RETURN rel;"
+						print (q)
+						results = session.run(q).data()
+	else:
+		print ("Proteine pas trouvee")
 
 
 """

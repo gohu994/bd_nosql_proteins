@@ -17,7 +17,8 @@ docker run 	--publish=7474:7474 --publish=7687:7687 	--volume=$HOME/neo4j/data:/
 $ python main.py
 ```
 
-## Load a csv in neo4j
+## Load a csv in neo4j 
+
 
 ```neo4j
 LOAD CSV WITH HEADERS FROM 'file:///test.tab' AS l FIELDTERMINATOR '\t'
@@ -38,6 +39,7 @@ RETURN prot,p
 ```neo4j
 MATCH (p:Prot {entry: 'P1'})-[:SIMILARITE]-(prot)-[:SIMILARITE]-(prot2)
 RETURN prot,prot2,p LIMIT 15
+
 ```
 
 ## Print a Prot and its similarities links BY PROTEIN NAME

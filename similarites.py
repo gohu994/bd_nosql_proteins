@@ -11,7 +11,8 @@ def compute_matrix(output_matrix_path):
     start_time = datetime.now()
 
     brut = pd.read_csv('datas/tostestas.tab', sep='\t', keep_default_na=False)
-    domains = brut["Crossreference"].str.split(';')
+    domains = brut["Cross_reference"].str.split(';')
+
     dataset = pd.DataFrame({'Entry': brut["Entry"], 'Domains': domains[:]})
     #dataset.index = dataset["Entry"]
     print(dataset)
