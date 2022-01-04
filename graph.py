@@ -1,6 +1,7 @@
 from neo4j import GraphDatabase
 import pandas as pd
 import numpy as np
+import sys
 
 driver = GraphDatabase.driver("bolt://localhost:7687")
 session = driver.session()
@@ -21,6 +22,7 @@ def create():
 	q = """
 	LOAD CSV WITH HEADERS FROM 'file:///tostestas.tab' AS l FIELDTERMINATOR '\t'
 	CREATE (n:Prot{entry:toString(l.Entry), cross:l.Cross_reference, name:l.Protein_names});
+
 	"""
 
 	results = session.run(q).data()
@@ -30,6 +32,7 @@ Ouvrir matrix_tri.csv (similarites) en DataSet
 Parcourir chaque paire (si similarite =/= 0 => requete neo4j)
 Requete neo4j de creation du lien
 """
+
 
 def createAllSim():
 
@@ -76,13 +79,11 @@ Input depuis la ligne de commande :
 - 1 pour la remplir avec les similarites
 """
 
-print("Recreer DB : 0, similarite DB : 1, similarité 1 prot : NOMPROT")
+print("Recreer DB : 0, similarite DB : 1")
 input = input()
 if (input=="0"):
-	q="MATCH (n:Prot) detach delete n"
+	q="MATCH (n:Protein) detach delete n"
 	results = session.run(q).data()
 	create()
 elif (input=="1"):
-	createAllSim()
-else:
-	createSim(input)
+	createSim()
