@@ -19,12 +19,15 @@ Requete de creation du fichier
 """
 
 def create():
+	q0 = """
+	MATCH (n:Prot) detach delete n;
+	"""
 	q = """
 	LOAD CSV WITH HEADERS FROM 'file:///tostestas.tab' AS l FIELDTERMINATOR '\t'
 	CREATE (n:Prot{entry:toString(l.Entry), cross:l.Cross_reference, name:l.Protein_names});
 
 	"""
-
+	results0 = session.run(q0).data()
 	results = session.run(q).data()
 
 """
@@ -74,20 +77,3 @@ def createSim(prot):
 	if (inside==False):
 		print("Protéine pas trouvée")
 
-
-"""
-Input depuis la ligne de commande :
-- 0 pour recreer la DB
-- 1 pour la remplir avec les similarites
-"""
-
-print("Recreer DB : 0, similarite DB : 1, similarité 1 protéine : nom de la protéine")
-input = input()
-if (input=="0"):
-	q="MATCH (n:Prot) detach delete n"
-	results = session.run(q).data()
-	create()
-elif (input=="1"):
-	createAllSim()
-else:
-	createSim(input)
