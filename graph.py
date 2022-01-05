@@ -21,7 +21,7 @@ Requete de creation du fichier
 def create():
 	q = """
 	LOAD CSV WITH HEADERS FROM 'file:///tostestas.tab' AS l FIELDTERMINATOR '\t'
-	CREATE (n:Prot{entry:toString(l.Entry), cross:l.Cross_reference, name:l.Protein_names});
+	CREATE (n:Prot{entry:toString(l.Entry), cross:l.Cross_reference, name:l.Protein_names, ec:l.ECnumber, go: l.GeneOntology});
 
 	"""
 
