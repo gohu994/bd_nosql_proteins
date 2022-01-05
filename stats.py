@@ -13,9 +13,18 @@ def getNumberIsolated():
 	results = session.run(q).data()
 	print(results)
 
-
 def getNumberLinked():
 	q="MATCH (p:Prot) WHERE (p)-[:SIMILARITE]-(:Prot) RETURN COUNT(p) AS linkedProteins"
+	results = session.run(q).data()
+	print(results)
+
+def getNumberLabelled():
+	q="MATCH (p:Prot) WHERE p.ec IS NOT NULL OR p.go IS NOT NULL RETURN COUNT(p) AS labelledProteins"
+	results = session.run(q).data()
+	print(results)
+
+def getNumberUnlabelled():
+	q="MATCH (p:Prot) WHERE p.ec IS NULL AND p.go IS NULL RETURN COUNT(p) AS unlabelledProteins"
 	results = session.run(q).data()
 	print(results)
 
@@ -35,10 +44,13 @@ Input depuis la ligne de commande :
 - 1 pour la remplir avec les similarites
 """
 
-print("Nombre de protéines isolées / linkées : 0, compte des protéines par nombre de domaines : 1")
+print("Nombre de protéines isolées / linkées : 0, Nombre de protéines labellées / non-labellées : 1, Compte des protéines par nombre de domaines : 2")
 input = input()
 if (input=="0"):
 	getNumberIsolated()
 	getNumberLinked()
 elif (input=="1"):
+	getNumberLabelled()
+	getNumberUnlabelled()
+elif (input=="2"):
 	countDomains()
