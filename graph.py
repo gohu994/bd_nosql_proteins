@@ -81,7 +81,7 @@ Input depuis la ligne de commande :
 - 1 pour la remplir avec les similarites
 """
 
-print("Recreer DB : 0, similarite DB : 1")
+print("Recreer DB : 0, similarite DB : 1, similarité 1 protéine : nom de la protéine")
 input = input()
 if (input=="0"):
 	q="MATCH (n:Prot) detach delete n"
