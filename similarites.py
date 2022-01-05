@@ -7,7 +7,7 @@ import os
 
 from pandas.core.frame import DataFrame
 
-def compute_matrix(output_matrix_path):
+def compute_matrix(protName):
     start_time = datetime.now()
 
     brut = pd.read_csv('datas/tostestas.tab', sep='\t', keep_default_na=False)
@@ -62,8 +62,7 @@ def compute_matrix(output_matrix_path):
         #print(0, '/', len(nomsProteines), ' proteins treated')
         return matrice
 
-
-    protname = "P1"
+    protname = protName
     mat = computeMatriceSimilarites(dataset, protname)[0]
     mat[0] = protname
     
@@ -111,4 +110,3 @@ def compute_matrix(output_matrix_path):
     
     
 
-compute_matrix("datas/matrix_tri.csv")

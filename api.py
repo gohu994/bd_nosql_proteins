@@ -3,6 +3,7 @@ from flask_cors import CORS
 from flask_restful import Api, Resource
 # TODO:  add swagger specs
 # from flask_restful_swagger import swagger
+import graph,similarites
 
 import json
 
@@ -18,10 +19,12 @@ class Protein(Resource):
       Insert protein similarity in neo4j
     """
     data = request.get_json()
-    print(data)
-    
+    print(data['body']['name'])
+
     # Use the function
-    
+    similarites.compute_matrix(data['body']['name'])
+    graph.create()
+    graph.createSim(data['body']['name'])
     return Response(response=json.dumps({"Status": "Data inserted"}),
                   status=200,
                   mimetype='application/json')
