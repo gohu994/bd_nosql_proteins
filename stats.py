@@ -28,7 +28,7 @@ def countDomains():
 		count[k["p"]["cross"].count(";")+1]=count[k["p"]["cross"].count(";")+1]+1
 	for i in range(len(count)):
 		print(i,"domaines :",count[i])
-	
+
 """
 Input depuis la ligne de commande :
 - 0 pour le nombre de protéines isolées

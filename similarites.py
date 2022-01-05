@@ -23,13 +23,15 @@ def compute_matrix(output_matrix_path):
     def compare(protA,protB):
         pA = list(protA)
         pB = list(protB)
+        print(pA)
+        print(pB)
         if pA[0] != '' and pB[0] != '':
             #entrée : liste des domaines de 2 protéines A et B
             prota = pA
             protb = pB
 
-            union = list(set(prota[0:-1]) | set(protb[0:-1]))
-            intersection = list(set(prota[0:-1]) & set(protb[0:-1]))
+            union = list(set(prota[0:len(prota)]) | set(protb[0:len(protb)]))
+            intersection = list(set(prota[0:len(prota)]) & set(protb[0:len(protb)]))
 
             return (len(intersection)/len(union))
         else:
@@ -63,7 +65,7 @@ def compute_matrix(output_matrix_path):
         return matrice
 
 
-    protname = "P1"
+    protname = "P6"
     mat = computeMatriceSimilarites(dataset, protname)[0]
     mat[0] = protname
     
