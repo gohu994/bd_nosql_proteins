@@ -37,8 +37,9 @@ RETURN prot,p
 ## Care about adding LIMIT to your queries...
 
 ```neo4j
-MATCH (p:Prot {entry: 'P1'})-[:SIMILARITE]-(prot)-[:SIMILARITE]-(prot2)
-RETURN prot,prot2,p LIMIT 15
+MATCH (prot0: Prot{entry: 'P1'})-[:SIMILARITE]-(prot1)
+MATCH (prot1)-[:SIMILARITE]-(prot2)
+RETURN prot0,prot1,prot2 LIMIT 15
 
 ```
 
