@@ -23,9 +23,16 @@ def getNumberLinked():
 def countDomains():
 	q="MATCH (p:Prot) RETURN p LIMIT 25"
 	results = session.run(q).data()
-	count = [0,0,0,0,0]
+	count = []
 	for k in results:
-		count[k["p"]["cross"].count(";")+1]=count[k["p"]["cross"].count(";")+1]+1
+		try:
+			# si le tableau count ne possède pas encore l'emplacement accueillant
+			# le nombre de domaine de la protéine évalué dans la boucle)
+			while (k["p"]["cross"].count(";")+1>=len(count)):
+				count.append(0)
+			count[k["p"]["cross"].count(";")+1]=count[k["p"]["cross"].count(";")+1]+1
+		except KeyError:
+			count[0]=count[0]+1
 	for i in range(len(count)):
 		print(i,"domaines :",count[i])
 
