@@ -57,9 +57,11 @@ def createAllSim():
 
 def createSim(prot):
 	similarites = pd.read_csv("datas/matrix_tri_test.csv")
+	inside = False
 
 	for column in similarites:
 		if (column==prot):
+			inside = True
 			for index, row in similarites.iterrows():
 				if (index!=column):
 					if (row[column]>0):
@@ -69,8 +71,8 @@ def createSim(prot):
 						q="MATCH (a:Prot {entry: \""+str(index)+"\"}) MATCH (b:Prot {entry:\""+str(column)+"\"}) MERGE (a)-[rel:SIMI {value:["+str(row[column])+"]}]-(b) RETURN rel;"
 						print (q)
 						results = session.run(q).data()
-	else:
-		print ("Proteine pas trouvee")
+	if (inside==False):
+		print("Protéine pas trouvée")
 
 
 """
@@ -82,8 +84,10 @@ Input depuis la ligne de commande :
 print("Recreer DB : 0, similarite DB : 1")
 input = input()
 if (input=="0"):
-	q="MATCH (n:Protein) detach delete n"
+	q="MATCH (n:Prot) detach delete n"
 	results = session.run(q).data()
 	create()
 elif (input=="1"):
-	createSim()
+	createAllSim()
+else:
+	createSim(input)
