@@ -64,7 +64,7 @@ def compute_matrix(protName):
         #print(0, '/', len(nomsProteines), ' proteins treated')
         return matrice
 
-    protname = "P1"
+    protname = protName
     mat = computeMatriceSimilarites(dataset, protname)[0]
     mat[0] = protname
     
