@@ -23,15 +23,13 @@ def compute_matrix(protName):
     def compare(protA,protB):
         pA = list(protA)
         pB = list(protB)
-        print(pA)
-        print(pB)
         if pA[0] != '' and pB[0] != '':
             #entrée : liste des domaines de 2 protéines A et B
             prota = pA
             protb = pB
 
-            union = list(set(prota[0:len(prota)]) | set(protb[0:len(protb)]))
-            intersection = list(set(prota[0:len(prota)]) & set(protb[0:len(protb)]))
+            union = list(set(prota[0:-1]) | set(protb[0:-1]))
+            intersection = list(set(prota[0:-1]) & set(protb[0:-1]))
 
             return (len(intersection)/len(union))
         else:
@@ -56,7 +54,7 @@ def compute_matrix(protName):
         index = nomsProteines.index(protName)
         print("Index: ",index)
         matrice[0][nomsProteines.index(protName)] = protName
-        print(matrice[0])
+        #print(matrice[0])
         for j in range(0,len(nomsProteines)):
             temp = compare(dataset['Domains'][index],dataset['Domains'][j])
             matrice[0][j+1] = temp
@@ -74,7 +72,7 @@ def compute_matrix(protName):
     lstSimilaire = []
     cpt = 0
     for i in matx:
-        if i != 0 and i != protname and i != 1: #  
+        if i != 0 and i != protname:
             lstSimilaire.append(entries[cpt-1])
             #print(cpt-1) # c'est l'index qui selectionne les proteine similaire
         cpt += 1
