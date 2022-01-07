@@ -62,7 +62,8 @@ def createSim(prot, seuil):
 	print("seuil : ", seuil)
 	similarites = pd.read_csv("datas/matrix_tri.csv")
 	inside = False
-
+	alone = True
+	print("prot prot : ",prot)
 	for column in similarites:
 		if (column==prot):
 			inside = True
@@ -78,6 +79,11 @@ def createSim(prot, seuil):
 						q="MATCH (a:Prot {entry: \""+str(index)+"\"}) MATCH (b:Prot {entry:\""+str(column)+"\"}) MERGE (a)-[rel:SIMI {value:["+str(row[column])+"]}]-(b) RETURN rel;"
 						print (q)
 						results = session.run(q).data()
+			if alone:
+				print('lonely protein' + prot)
+				q = "MATCH (a:Prot {entry: \"" + prot + "\"}) MATCH (b:Prot {entry:\"" + prot + "\"}) MERGE (a)-[rel:SIMI {value:[" + str(1.0) + "]}]-(b) RETURN rel;"
+				results = session.run(q).data()
+
 	if (inside==False):
 		print("Protéine pas trouvée")
 
