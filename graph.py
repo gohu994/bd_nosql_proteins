@@ -23,7 +23,7 @@ def create():
 	MATCH (n:Prot) detach delete n;
 	"""
 	q = """
-	LOAD CSV WITH HEADERS FROM 'file:///tostestas.tab' AS l FIELDTERMINATOR '\t'
+	LOAD CSV WITH HEADERS FROM 'file:///datas/fulldata.tab' AS l FIELDTERMINATOR '\t'
 	CREATE (n:Prot{entry:toString(l.Entry), cross:l.Cross_reference, name:l.Protein_names});
 
 	"""
@@ -42,7 +42,7 @@ def createAllSim():
 	qDel = "MATCH (a:Prot)-[r:SIMILARITE]->(b:Prot) DELETE r"
 	session.run(qDel).data()
 
-	similarites = pd.read_csv("datas/matrix_tri_test.csv")
+	similarites = pd.read_csv("datas/matrix_tri.csv")
 
 	for column in similarites:
 		for index, row in similarites.iterrows():

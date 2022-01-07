@@ -10,8 +10,8 @@ from pandas.core.frame import DataFrame
 def compute_matrix(protName):
     start_time = datetime.now()
 
-    brut = pd.read_csv('datas/tostestas.tab', sep='\t', keep_default_na=False)
-    domains = brut["Cross_reference"].str.split(';')
+    brut = pd.read_csv('datas/fulldata.tab', sep='\t', keep_default_na=False)
+    domains = brut["Cross-reference (InterPro)"].str.split(';')
 
     dataset = pd.DataFrame({'Entry': brut["Entry"], 'Domains': domains[:]})
     #dataset.index = dataset["Entry"]
