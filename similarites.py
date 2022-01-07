@@ -76,36 +76,56 @@ def compute_matrix(protName):
             lstSimilaire.append(entries[cpt-1])
             #print(cpt-1) # c'est l'index qui selectionne les proteine similaire
         cpt += 1
-    print(lstSimilaire)
+    print("similaires : ",lstSimilaire)
     
     if os.path.isfile("datas/matrix_tri.csv"):
         # fichier existe
         # ajouter une line au fichier
-        file = pd.read_csv('datas/matrix_tri.csv', sep=',', keep_default_na=False)
-        # check if line exist
-        if not (file.index == protname).any():
-            append_list_as_row('datas/matrix_tri.csv', list(mat))
+        with open("datas/matrix_tri.csv", 'a+', newline='') as write_obj:
+            # Create a writer object from csv module
+            csv_writer = writer(write_obj)
+            # Add contents of list as last row in the csv file
 
+            file = pd.read_csv('datas/matrix_tri.csv', sep=',', keep_default_na=False)
+            # check if line exist
+            if not (file.index == protname).any():
+                #append_list_as_row('datas/matrix_tri.csv', list(mat))
+                csv_writer.writerow(list(mat))
+
+                for name in list(lstSimilaire):
+                    print("NAME : ",name)
+                    mat2 = computeMatriceSimilarites(dataset, name)[0]
+                    mat2[0] = name
+                    print("A")
+                    if not (file.index == name).any():
+                        print("B")
+                        #append_list_as_row('datas/matrix_tri.csv', list(mat2))
+                        csv_writer.writerow(list(mat2))
+                        print("C\n")
+
+
+    else:
+        with open("datas/matrix_tri.csv", 'a+', newline='') as write_obj:
+            # Create a writer object from csv module
+            csv_writer = writer(write_obj)
+            # Add contents of list as last row in the csv file
+
+            # fichier existe pas
+            #append_list_as_row('datas/matrix_tri.csv', list(dataset["Entry"]))
+            csv_writer.writerow(list(dataset["Entry"]))
+            #append_list_as_row('datas/matrix_tri.csv', list(mat))
+            csv_writer.writerow(list(mat))
+            file = pd.read_csv('datas/matrix_tri.csv', sep=',', keep_default_na=False)
+
+            print(list(lstSimilaire))
             for name in list(lstSimilaire):
                 print("NAME : ",name)
                 mat2 = computeMatriceSimilarites(dataset, name)[0]
                 mat2[0] = name
                 if not (file.index == name).any():
-                    append_list_as_row('datas/matrix_tri.csv', list(mat2))
-                
-    else:
-        # fichier existe pas        
-        append_list_as_row('datas/matrix_tri.csv', list(dataset["Entry"]))
-        append_list_as_row('datas/matrix_tri.csv', list(mat))
-        file = pd.read_csv('datas/matrix_tri.csv', sep=',', keep_default_na=False)
-        
-        print(list(lstSimilaire))
-        for name in list(lstSimilaire):
-            print("NAME : ",name)
-            mat2 = computeMatriceSimilarites(dataset, name)[0]
-            mat2[0] = name
-            if not (file.index == name).any():
-                append_list_as_row('datas/matrix_tri.csv', list(mat2))
+                    #append_list_as_row('datas/matrix_tri.csv', list(mat2))
+                    csv_writer.writerow(list(mat2))
+
     
     
     
