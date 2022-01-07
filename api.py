@@ -24,7 +24,7 @@ class Protein(Resource):
     # Use the function
     similarites.compute_matrix(data['body']['name'])
     graph.create()
-    graph.createSim(data['body']['name'])
+    graph.createSim(data['body']['name'], data['body']['seuil'])
     return Response(response=json.dumps({"Status": "Data inserted"}),
                   status=200,
                   mimetype='application/json')

@@ -58,16 +58,20 @@ def createAllSim():
 				print (q)
 				results = session.run(q).data()
 
-def createSim(prot):
-	similarites = pd.read_csv("datas/matrix_tri_test.csv")
+def createSim(prot, seuil):
+	print("seuil : ", seuil)
+	similarites = pd.read_csv("datas/matrix_tri.csv")
 	inside = False
 
 	for column in similarites:
 		if (column==prot):
 			inside = True
+
 			for index, row in similarites.iterrows():
+
 				if (index!=column):
-					if (row[column]>0):
+					if (row[column] > float(seuil)):
+						alone = False
 						print (index)
 						print (column)
 						print(row[column])
