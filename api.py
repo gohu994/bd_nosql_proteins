@@ -22,9 +22,12 @@ class Protein(Resource):
     print(data['body']['name'])
 
     # Use the function
-    similarites.compute_matrix(data['body']['name'])
+    lstSimilaire = similarites.compute_matrix(data['body']['name'])
     graph.create()
     graph.createSim(data['body']['name'], data['body']['seuil'])
+    for elt in lstSimilaire:
+        graph.createSim(elt,data['body']['seuil'])
+
     return Response(response=json.dumps({"Status": "Data inserted"}),
                   status=200,
                   mimetype='application/json')
