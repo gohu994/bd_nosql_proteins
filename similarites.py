@@ -10,7 +10,7 @@ from pandas.core.frame import DataFrame
 def compute_matrix(protName):
     start_time = datetime.now()
 
-    brut = pd.read_csv('datas/fulldata.tab', sep='\t', keep_default_na=False)
+    brut = pd.read_csv('datas/fulldata_6k.tab', sep='\t', keep_default_na=False)
     domains = brut["Cross-reference (InterPro)"].str.split(';')
 
     dataset = pd.DataFrame({'Entry': brut["Entry"], 'Domains': domains[:]})
@@ -81,27 +81,24 @@ def compute_matrix(protName):
     if os.path.isfile("datas/matrix_tri.csv"):
         # fichier existe
         # ajouter une line au fichier
+        file = pd.read_csv('datas/matrix_tri.csv', sep=',', keep_default_na=False)
         with open("datas/matrix_tri.csv", 'a+', newline='') as write_obj:
-            # Create a writer object from csv module
             csv_writer = writer(write_obj)
             # Add contents of list as last row in the csv file
 
-            file = pd.read_csv('datas/matrix_tri.csv', sep=',', keep_default_na=False)
             # check if line exist
             if not (file.index == protname).any():
                 #append_list_as_row('datas/matrix_tri.csv', list(mat))
                 csv_writer.writerow(list(mat))
 
-                for name in list(lstSimilaire):
-                    print("NAME : ",name)
+            for name in list(lstSimilaire):
+                if not (file.index == name).any():
+                    print("NAME : ", name)
                     mat2 = computeMatriceSimilarites(dataset, name)[0]
+                    print(mat2)
                     mat2[0] = name
-                    print("A")
-                    if not (file.index == name).any():
-                        print("B")
-                        #append_list_as_row('datas/matrix_tri.csv', list(mat2))
-                        csv_writer.writerow(list(mat2))
-                        print("C\n")
+                    #append_list_as_row('datas/matrix_tri.csv', list(mat2))
+                    csv_writer.writerow(list(mat2))
 
 
     else:
@@ -113,19 +110,25 @@ def compute_matrix(protName):
             # fichier existe pas
             #append_list_as_row('datas/matrix_tri.csv', list(dataset["Entry"]))
             csv_writer.writerow(list(dataset["Entry"]))
+            print("en tete : ",list(dataset['Entry']))
             #append_list_as_row('datas/matrix_tri.csv', list(mat))
             csv_writer.writerow(list(mat))
-            file = pd.read_csv('datas/matrix_tri.csv', sep=',', keep_default_na=False)
 
+        file = pd.read_csv('datas/matrix_tri.csv', sep=',', keep_default_na=False)
+        with open("datas/matrix_tri.csv", 'a+', newline='') as write_obj:
+            csv_writer = writer(write_obj)
             print(list(lstSimilaire))
             for name in list(lstSimilaire):
                 print("NAME : ",name)
-                mat2 = computeMatriceSimilarites(dataset, name)[0]
-                mat2[0] = name
                 if not (file.index == name).any():
+                    print("calcul... ", name)
+                    mat2 = computeMatriceSimilarites(dataset, name)[0]
+                    mat2[0] = name
+                    print(mat2)
                     #append_list_as_row('datas/matrix_tri.csv', list(mat2))
                     csv_writer.writerow(list(mat2))
 
+    return lstSimilaire
     
     
     

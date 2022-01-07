@@ -1,8 +1,8 @@
 Entry	Cross_reference	Protein_names	ECnumber	GeneOntology
-P1	D1;D2;D3	Protein Name 1	1.2.3.4.5	nucleus [GO:3234]
-P2	D2;D4;D5	Protein Name 2	2.2.2.3.4	nucleus [GO:23231];
-P3	D6;D7	Protein Name 3
-P4	D7;D2;D5	Protein Name 4	1.2.3.4.5
-P5	D8;D9;D1;D2	Protein Name 5		nucleus [GO:0005634];
-P6	D8	Protein Name 6
+P1	D1;D2;D3;	Protein Name 1	1.2.3.4.5	nucleus [GO:3234]
+P2	D2;D4;D5;	Protein Name 2	2.2.2.3.4	nucleus [GO:23231];
+P3	D6;D7;	Protein Name 3
+P4	D7;D2;D5;	Protein Name 4	1.2.3.4.5
+P5	D8;D9;D1;D2;	Protein Name 5		nucleus [GO:0005634];
+P6	D8;	Protein Name 6
 P7		Protein Name 7
