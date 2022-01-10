@@ -23,7 +23,7 @@ def create():
 	MATCH (n:Prot) detach delete n;
 	"""
 	q = """
-	LOAD CSV WITH HEADERS FROM 'file:///datas/fulldata_6k.tab' AS l FIELDTERMINATOR '\t'
+	LOAD CSV WITH HEADERS FROM 'file:///fulldata.tab' AS l FIELDTERMINATOR '\t'
 	CREATE (n:Prot{entry:toString(l.Entry), cross:l.Cross_reference, name:l.Protein_names});
 
 	"""
