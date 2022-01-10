@@ -20,11 +20,17 @@ Requete de creation du fichier
 """
 
 def create():
-	q = """
-	LOAD CSV WITH HEADERS FROM 'file:///tostestas.tab' AS l FIELDTERMINATOR '\t'
-	CREATE (n:Protein{entry:toString(l.Entry), cross:l.Crossreference});
+  
+	q1 = """
+		MATCH (n) detach delete n;
 	"""
 
+	q = """
+		LOAD CSV WITH HEADERS FROM 'file:///fulldata.tab' AS l FIELDTERMINATOR '\t'
+		CREATE (n:Prot{entry:toString(l.Entry), cross:l.Crossreference});
+	"""
+
+	results = session.run(q1).data()
 	results = session.run(q).data()
 
 """
@@ -33,9 +39,9 @@ Parcourir chaque paire (si similarite =/= 0 => requete neo4j)
 Requete neo4j de creation du lien
 """
 
-def createSim():
+def createSim(seuil):
 
-	qDel = "MATCH (a:Protein)-[r:SIMILARITE]->(b:Protein) DELETE r"
+	qDel = "MATCH (a:Prot)-[r:SIMI]->(b:Prot) DELETE r"
 	session.run(qDel).data()
 
 	similarites = pd.read_csv("datas/matrix_tri.csv")
@@ -46,28 +52,12 @@ def createSim():
 		for index, row in similarites.iterrows():
 			if (column==index):
 					break
-			if (row[column]>0):
-				print(column)
-				print(index)
-				print(row[column])
-				#q="CREATE (Protein:"+column+")-[r:SIMILARITE]->(Protein:"+index+")"
+			if (row[column]>= float(seuil)):
+				#print(column)
+				#print(index)
+				#print(row[column])
 				#q="MATCH (a:Prot), (b:Prot) WHERE a.entry = '"+str(index)+"' AND b.entry = '"+str(column)+"' CREATE (a)-[r:"+str(row[column])+"]->(b) RETURN type(r)"
-				q="MATCH (a:Protein {entry: \""+str(index)+"\"}) MATCH (b:Protein {entry:\""+str(column)+"\"}) MERGE (a)-[rel:SIMILARITE {value:["+str(row[column])+"]}]-(b) RETURN rel;"
-				print (q)
+				q="MATCH (a:Prot {entry: \""+str(index)+"\"}) MATCH (b:Prot {entry:\""+str(column)+"\"}) MERGE (a)-[rel:SIMI {value:["+str(row[column])+"]}]-(b) RETURN rel;"
+				#print (q)
 				results = session.run(q).data()
 
-
-"""
-Input depuis la ligne de commande :
-- 0 pour recreer la DB
-- 1 pour la remplir avec les similarites
-"""
-
-print("Recreer DB : 0, similarite DB : 1")
-input = input()
-if (input=="0"):
-	q="MATCH (n:Protein) detach delete n"
-	results = session.run(q).data()
-	create()
-elif (input=="1"):
-	createSim()

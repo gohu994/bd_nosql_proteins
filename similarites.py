@@ -7,11 +7,11 @@ import os
 
 from pandas.core.frame import DataFrame
 
-def compute_matrix(output_matrix_path):
+def compute_matrix(protName):
     start_time = datetime.now()
 
-    brut = pd.read_csv('datas/tostestas.tab', sep='\t', keep_default_na=False)
-    domains = brut["Crossreference"].str.split(';')
+    brut = pd.read_csv('datas/fulldata.tab', sep='\t', keep_default_na=False)
+    domains = brut["Cross-reference (InterPro)"].str.split(';')
     dataset = pd.DataFrame({'Entry': brut["Entry"], 'Domains': domains[:]})
     #dataset.index = dataset["Entry"]
     print(dataset)
@@ -62,7 +62,7 @@ def compute_matrix(output_matrix_path):
         return matrice
 
 
-    protname = "P1"
+    protname = protName
     mat = computeMatriceSimilarites(dataset, protname)[0]
     mat[0] = protname
     
@@ -109,5 +109,3 @@ def compute_matrix(output_matrix_path):
     
     
     
-
-compute_matrix("datas/matrix_tri.csv")
