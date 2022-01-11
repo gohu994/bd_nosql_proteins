@@ -2,42 +2,39 @@ from neo4j import GraphDatabase
 import pandas as pd
 import numpy as np
 
-import sys
+import os.path
 
 driver = GraphDatabase.driver("bolt://localhost:7687")
 session = driver.session()
-print("connected.")
 
 def getNumberIsolated():
-	q="MATCH (p:Prot) WHERE NOT (p)-[:SIMILARITE]-(:Prot) RETURN COUNT(p) AS isolatedProteins"
+	q="MATCH (p:Prot) WHERE NOT (p)-[:SIMI]-(:Prot) RETURN COUNT(p) AS isolatedProteins"
 	results = session.run(q).data()
-	print(results)
-	return results
+	return results[0].get("isolatedProteins")
 
 def getNumberLinked():
-	q="MATCH (p:Prot) WHERE (p)-[:SIMILARITE]-(:Prot) RETURN COUNT(p) AS linkedProteins"
+	q="MATCH (p:Prot) WHERE (p)-[:SIMI]-(:Prot) RETURN COUNT(p) AS linkedProteins"
 	results = session.run(q).data()
-	print(results)
-	return results
+	return results[0].get("linkedProteins")
+
 
 def getNumberLabelled():
-	q="MATCH (p:Prot) WHERE p.ec IS NOT NULL OR p.go IS NOT NULL RETURN COUNT(p) AS labelledProteins"
+	q="MATCH (p:Prot) WHERE p.ECnumber IS NOT NULL OR p.geneOntology IS NOT NULL RETURN COUNT(p) AS labelledProteins"
 	results = session.run(q).data()
-	print(results)
-	return results
+	return results[0].get("labelledProteins")
 
 def getNumberUnlabelled():
-	q="MATCH (p:Prot) WHERE p.ec IS NULL AND p.go IS NULL RETURN COUNT(p) AS unlabelledProteins"
+	q="MATCH (p:Prot) WHERE p.ECnumber IS NULL AND p.geneOntology IS NULL RETURN COUNT(p) AS unlabelledProteins"
 	results = session.run(q).data()
-	print(results)
-	return results
+	return results[0].get("unlabelledProteins")
 
 def getNumberCompiled():
-	df = pd.read_csv("./datas/matrix_tri.csv")
-	print("rows : ",len(df))
-	print("columns : ",len(df.columns))
-	print(len(df)*100/len(df.columns),"% de protéines connues")
-	return len(df)*100/len(df.columns)
+	if os.path.isfile("datas/matrix_tri.csv"):
+		df = pd.read_csv("datas/matrix_tri.csv")
+		print(len(df),len(df.columns))
+		return round(len(df)*100/len(df.columns),2)
+	else:
+		return 0
 
 def countDomains():
 	q="MATCH (p:Prot) RETURN p"
@@ -55,24 +52,3 @@ def countDomains():
 	for i in range(len(count)):
 		print(i,"domaines :",count[i])
 	return count
-
-"""
-Input depuis la ligne de commande :
-- 0 pour le nombre de protéines isolées
-- 1 pour la remplir avec les similarites
-
-
-print("Nombre de protéines isolées / linkées : 0, Nombre de protéines labellées / non-labellées : 1, Compte des protéines par nombre de domaines : 2, Nombre des protéines connues : 3")
-input = input()
-if (input=="0"):
-	getNumberIsolated()
-	getNumberLinked()
-elif (input=="1"):
-	getNumberLabelled()
-	getNumberUnlabelled()
-elif (input=="2"):
-	countDomains()
-elif (input=="3"):
-	getNumberCompiled()
-else:
-	print("Grosse folle")"""

@@ -76,10 +76,29 @@ class Clean(Resource):
                   status=200,
                   mimetype='application/json')
 
-# resources
+class Stats(Resource):
+  def get(self):
+    print("Stats called")
+
+    # Use the function
+    numberIsolated = stats.getNumberIsolated()
+    numberLinked = stats.getNumberLinked()
+    numberLabelled = stats.getNumberLabelled()
+    numberUnlabelled = stats.getNumberUnlabelled()
+    numberCompiled = stats.getNumberCompiled()
+    numberDomains = stats.countDomains()
+
+    return Response(response=json.dumps({"numberIsolated":numberIsolated, "numberLinked":numberLinked, "numberLabelled":numberLabelled, "numberUnlabelled":numberUnlabelled,
+                                         "numberCompiled":numberCompiled, "numberDomains":numberDomains}),
+                  status=200,
+                  mimetype='application/json')
+
+
+# resources 
 api.add_resource(Protein, "/protein")
 api.add_resource(Stats, "/stats")
 api.add_resource(Clean, "/clean")
+
 # main
 if __name__ == "__main__":
   app.run(debug=True)

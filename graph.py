@@ -20,8 +20,8 @@ Requete de creation du fichier
 
 def create():
 	q = """
-	LOAD CSV WITH HEADERS FROM 'file:///fulldata_6k.tab' AS l FIELDTERMINATOR '\t'
-	CREATE (n:Prot{entry:toString(l.Entry), cross:l.Cross_reference, name:l.Protein_names});
+	LOAD CSV WITH HEADERS FROM 'file:///fulldata.tab' AS l FIELDTERMINATOR '\t'
+	CREATE (n:Prot{entry:toString(l.Entry), cross:l.Cross_reference, name:l.Protein_names, ECnumber: l.EC_number});
 
 	"""
 	results0 = session.run(q).data()
@@ -32,7 +32,6 @@ def delete():
 	MATCH (n:Prot) detach delete n;
 	"""
 	results0 = session.run(q0).data()
-
 """
 Ouvrir matrix_tri.csv (similarites) en DataSet
 Parcourir chaque paire (si similarite =/= 0 => requete neo4j)
