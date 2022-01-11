@@ -13,7 +13,7 @@ import graph
 def compute_matrix(protName, seuil):
     start_time = datetime.now()
     #graph.create()
-    brut = pd.read_csv('datas/fulldata_6k.tab', sep='\t', keep_default_na=False)
+    brut = pd.read_csv('datas/fulldata.tab', sep='\t', keep_default_na=False)
     domains = brut["Cross-reference (InterPro)"].str.split(';')
 
     dataset = pd.DataFrame({'Entry': brut["Entry"], 'Domains': domains[:]})
