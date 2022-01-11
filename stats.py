@@ -19,12 +19,12 @@ def getNumberLinked():
 
 
 def getNumberLabelled():
-	q="MATCH (p:Prot) WHERE p.ECnumber IS NOT NULL OR p.geneOntology IS NOT NULL RETURN COUNT(p) AS labelledProteins"
+	q="MATCH (p:Prot) WHERE p.ECnumber IS NOT NULL RETURN COUNT(p) AS labelledProteins"
 	results = session.run(q).data()
 	return results[0].get("labelledProteins")
 
 def getNumberUnlabelled():
-	q="MATCH (p:Prot) WHERE p.ECnumber IS NULL AND p.geneOntology IS NULL RETURN COUNT(p) AS unlabelledProteins"
+	q="MATCH (p:Prot) WHERE p.ECnumber IS NULL RETURN COUNT(p) AS unlabelledProteins"
 	results = session.run(q).data()
 	return results[0].get("unlabelledProteins")
 
