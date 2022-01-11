@@ -47,37 +47,6 @@ python api.py
 - GET /stats
 - DELETE /clean 
 
-## Authors
-
-* **Damien ETHÈVE**
-* **Hugo BENAMEUR**
-* **Steson TANG**
-* **Maxime NEVEUX** 
-
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ## Util commands
 
 ### Load a csv in neo4j 
@@ -121,3 +90,15 @@ RETURN COUNT(p) AS isolatedProteins
 
 ### Check number of existing relationships of given prot with threshold
 MATCH p=(:Prot {entry: 'P4'})<-[r:SIMI]->() WHERE r.value[0] >= 0.5 RETURN count(p)
+
+## Authors
+
+* **Damien ETHÈVE**
+* **Hugo BENAMEUR**
+* **Steson TANG**
+* **Maxime NEVEUX** 
+
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
