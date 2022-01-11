@@ -48,7 +48,7 @@ class Protein(Resource):
 
 # resources 
 class Stats(Resource):
-  def post(self):
+  def get(self):
     print("Stats")
 
     # Use the function
