@@ -7,18 +7,21 @@ import os
 
 from pandas.core.frame import DataFrame
 
-def compute_matrix(protName):
-    start_time = datetime.now()
+import graph
 
+
+def compute_matrix(protName, seuil):
+    start_time = datetime.now()
+    #graph.create()
     brut = pd.read_csv('datas/fulldata_6k.tab', sep='\t', keep_default_na=False)
     domains = brut["Cross-reference (InterPro)"].str.split(';')
 
     dataset = pd.DataFrame({'Entry': brut["Entry"], 'Domains': domains[:]})
     #dataset.index = dataset["Entry"]
-    print(dataset)
+    #print(dataset)
 
     stageDSCreated_time = datetime.now()
-    print('Création du dataset : ', stageDSCreated_time - start_time, ' (hh:mm:ss.ms)')
+    #print('Création du dataset : ', stageDSCreated_time - start_time, ' (hh:mm:ss.ms)')
 
     def compare(protA,protB):
         pA = list(protA)
@@ -35,16 +38,10 @@ def compute_matrix(protName):
         else:
             return 0
 
-    def append_list_as_row(file_name, list_of_elem):
-    # Open file in append mode
-        with open(file_name, 'a+', newline='') as write_obj:
-            # Create a writer object from csv module
-            csv_writer = writer(write_obj)
-            # Add contents of list as last row in the csv file
-            csv_writer.writerow(list_of_elem)
-        
+    nomsProteines = list(dataset['Entry'])
+
     def computeMatriceSimilarites(dataset, protName):
-        nomsProteines = list(dataset['Entry'])
+
         #print(nomsProteines.index(protName))
         matrice = np.zeros((1,len(nomsProteines)+1), dtype=object) # np.zeros(nb lignes, nb colonnes)
         #print(matrice)
@@ -52,8 +49,10 @@ def compute_matrix(protName):
         #index = dataset.loc[protName, :]
         #print("INDEX", index)
         index = nomsProteines.index(protName)
-        print("Index: ",index)
+        #print("Index: ",index)
+        #print(matrice)
         matrice[0][nomsProteines.index(protName)] = protName
+        #print(matrice)
         #print(matrice[0])
         for j in range(0,len(nomsProteines)):
             temp = compare(dataset['Domains'][index],dataset['Domains'][j])
@@ -64,10 +63,12 @@ def compute_matrix(protName):
 
     protname = protName
     mat = computeMatriceSimilarites(dataset, protname)[0]
+    print(mat)
     mat[0] = protname
+
     
     # calculer similatité des voisins
-    entries=list(dataset["Entry"])
+    entries=nomsProteines
     matx=list(mat)
     lstSimilaire = []
     cpt = 0
@@ -77,8 +78,12 @@ def compute_matrix(protName):
             #print(cpt-1) # c'est l'index qui selectionne les proteine similaire
         cpt += 1
     print("similaires : ",lstSimilaire)
-    
-    if os.path.isfile("datas/matrix_tri.csv"):
+
+    graph.createSimWithoutCSV(similarites=list(mat)[1:],proteines=nomsProteines,prot=protname,seuil=seuil)
+
+    return lstSimilaire
+
+"""
         # fichier existe
         # ajouter une line au fichier
         file = pd.read_csv('datas/matrix_tri.csv', sep=',', keep_default_na=False)
@@ -127,9 +132,8 @@ def compute_matrix(protName):
                     print(mat2)
                     #append_list_as_row('datas/matrix_tri.csv', list(mat2))
                     csv_writer.writerow(list(mat2))
+"""
 
-    return lstSimilaire
-    
     
     
 

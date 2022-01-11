@@ -57,3 +57,6 @@ RETURN prot,p
 MATCH (p:Protein)
 WHERE NOT (p)-[:SIMILARITE]-(:Protein)
 RETURN COUNT(p) AS isolatedProteins
+
+## Check number of existing relationships of given prot with threshold
+MATCH p=(:Prot {entry: 'P4'})<-[r:SIMI]->() WHERE r.value[0] >= 0.5 RETURN count(p)

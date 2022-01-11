@@ -19,16 +19,19 @@ Requete de creation du fichier
 """
 
 def create():
-	q0 = """
-	MATCH (n:Prot) detach delete n;
-	"""
 	q = """
-	LOAD CSV WITH HEADERS FROM 'file:///fulldata.tab' AS l FIELDTERMINATOR '\t'
+	LOAD CSV WITH HEADERS FROM 'file:///fulldata_6k.tab' AS l FIELDTERMINATOR '\t'
 	CREATE (n:Prot{entry:toString(l.Entry), cross:l.Cross_reference, name:l.Protein_names});
 
 	"""
+	results0 = session.run(q).data()
+
+
+def delete():
+	q0 = """
+	MATCH (n:Prot) detach delete n;
+	"""
 	results0 = session.run(q0).data()
-	results = session.run(q).data()
 
 """
 Ouvrir matrix_tri.csv (similarites) en DataSet
@@ -63,7 +66,7 @@ def createSim(prot, seuil):
 	try:
 		similarites = similarites_csv.loc[prot]
 		header = list(similarites_csv.columns)
-		print("loc : \n", similarites.loc[prot], "\n")
+		#print("loc : \n", similarites.loc[prot], "\n")
 		for head in header:
 			if head != prot and similarites.loc[head] > seuil:
 				alone = False
@@ -76,7 +79,7 @@ def createSim(prot, seuil):
 				1.0) + "]}]-(b) RETURN rel;"
 			results = session.run(q).data()
 	except KeyError:
-		print("Protéine",prot,"pas trouvée")
+		print("Protéine ",prot," pas trouvée")
 
 
 	"""for row in similarites:
@@ -98,3 +101,32 @@ def createSim(prot, seuil):
 				results = session.run(q).data()
 """
 
+def createSimWithoutCSV(similarites,proteines,prot, seuil):
+	"""
+	:param similarites: liste de la similarité d'une protéine avec toutes les autres
+	:param proteines: liste de toutes les protéines
+	:param prot: nom de la protéine demandée
+	:param seuil: seuil
+	"""
+	print("seuil : ", seuil)
+	alone = True
+	try:
+		header = proteines
+		for i in range(len(header)):
+			head = header[i]
+			#print(i,prot,head,similarites[i],float(seuil), alone)
+			if head != prot and float(similarites[i]) > float(seuil):
+				#print('OK')
+				alone = False
+
+				q="MATCH (a:Prot {entry: \"" + head + "\"}) MATCH (b:Prot {entry:\"" + prot + "\"}) MERGE (a)-[rel:SIMI {value:[" + str(
+						similarites[i]) + "]}]->(b) RETURN rel;"
+				results = session.run(q).data()
+		#print(alone)
+		if alone:
+			print('lonely protein ' + prot)
+			q="MATCH (a:Prot {entry: \"" + head + "\"}) MATCH (b:Prot {entry:\"" + head + "\"}) MERGE (a)-[rel:SIMI {value:[" + str(
+				1.0) + "]}]-(b) RETURN rel;"
+			results = session.run(q).data()
+	except KeyError:
+		print("Protéine",prot,"pas trouvée")

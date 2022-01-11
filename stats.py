@@ -60,7 +60,7 @@ def countDomains():
 Input depuis la ligne de commande :
 - 0 pour le nombre de protéines isolées
 - 1 pour la remplir avec les similarites
-"""
+
 
 print("Nombre de protéines isolées / linkées : 0, Nombre de protéines labellées / non-labellées : 1, Compte des protéines par nombre de domaines : 2, Nombre des protéines connues : 3")
 input = input()
@@ -75,4 +75,4 @@ elif (input=="2"):
 elif (input=="3"):
 	getNumberCompiled()
 else:
-	print("Grosse folle")
+	print("Grosse folle")"""
