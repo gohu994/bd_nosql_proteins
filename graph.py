@@ -20,8 +20,8 @@ Requete de creation du fichier
 
 def create():
 	q = """
-	LOAD CSV WITH HEADERS FROM 'file:///fulldata.tab' AS l FIELDTERMINATOR '\t'
-	CREATE (n:Prot{entry:toString(l.Entry), cross:l.Cross_reference, name:l.Protein_names, ECnumber: l.EC_number});
+		LOAD CSV WITH HEADERS FROM 'file:///fulldata.tab' AS l FIELDTERMINATOR '\t'
+		CREATE (n:Prot{entry:toString(l.Entry), cross:l.CrossReference, name:l.ProteinNames, ecNumber:l.ECnumber, geneOntology: l.GeneOntology});
 
 	"""
 	results0 = session.run(q).data()

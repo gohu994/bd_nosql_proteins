@@ -56,11 +56,8 @@ class Stats(Resource):
     numberLinked = stats.getNumberLinked()
     numberLabelled = stats.getNumberLabelled()
     numberUnlabelled = stats.getNumberUnlabelled()
-    numberCompiled = stats.getNumberCompiled()
-    numberDomains = stats.countDomains()
 
-    return Response(response=json.dumps({"numberIsolated":numberIsolated, "numberLinked":numberLinked, "numberLabelled":numberLabelled, "numberUnlabelled":numberUnlabelled,
-                                         "numberCompiled":numberCompiled,"numberDomains":numberDomains}),
+    return Response(response=json.dumps({"numberIsolated":numberIsolated, "numberLinked":numberLinked, "numberLabelled":numberLabelled, "numberUnlabelled":numberUnlabelled}),
                   status=200,
                   mimetype='application/json')
 
@@ -75,24 +72,6 @@ class Clean(Resource):
     return Response(response=json.dumps({"Status": "Graph cleaned"}),
                   status=200,
                   mimetype='application/json')
-
-class Stats(Resource):
-  def get(self):
-    print("Stats called")
-
-    # Use the function
-    numberIsolated = stats.getNumberIsolated()
-    numberLinked = stats.getNumberLinked()
-    numberLabelled = stats.getNumberLabelled()
-    numberUnlabelled = stats.getNumberUnlabelled()
-    numberCompiled = stats.getNumberCompiled()
-    numberDomains = stats.countDomains()
-
-    return Response(response=json.dumps({"numberIsolated":numberIsolated, "numberLinked":numberLinked, "numberLabelled":numberLabelled, "numberUnlabelled":numberUnlabelled,
-                                         "numberCompiled":numberCompiled, "numberDomains":numberDomains}),
-                  status=200,
-                  mimetype='application/json')
-
 
 # resources 
 api.add_resource(Protein, "/protein")
