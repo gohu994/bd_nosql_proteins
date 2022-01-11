@@ -116,12 +116,14 @@ def createSimWithoutCSV(similarites,proteines,prot, seuil):
 			head = header[i]
 			#print(i,prot,head,similarites[i],float(seuil), alone)
 			if head != prot and float(similarites[i]) > float(seuil):
+				q_0 = "MATCH p=(:Prot {entry: '" + head + "'})-[r:SIMI]-() WHERE r.value[0] > " + str(seuil) + " RETURN count(p)"
+				res_0 = session.run(q_0).data()[0]['count(p)']
 				#print('OK')
 				alone = False
-
-				q="MATCH (a:Prot {entry: \"" + head + "\"}) MATCH (b:Prot {entry:\"" + prot + "\"}) MERGE (a)-[rel:SIMI {value:[" + str(
-						similarites[i]) + "]}]->(b) RETURN rel;"
-				results = session.run(q).data()
+				if res_0 == 0:
+					q="MATCH (a:Prot {entry: \"" + head + "\"}) MATCH (b:Prot {entry:\"" + prot + "\"}) MERGE (a)-[rel:SIMI {value:[" + str(
+							similarites[i]) + "]}]->(b) RETURN rel;"
+					results = session.run(q).data()
 		#print(alone)
 		if alone:
 			print('lonely protein ' + prot)
